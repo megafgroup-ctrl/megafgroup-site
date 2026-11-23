@@ -122,6 +122,8 @@ nav .wrap{display:flex;align-items:center;gap:20px;min-height:68px;flex-wrap:wra
 .vid{border-radius:22px;overflow:hidden;border:1px solid var(--line);box-shadow:0 30px 70px -30px rgba(0,0,0,.85);background:#0b2140}
 .vid video{display:block;width:100%;aspect-ratio:1152/1080;object-fit:cover}
 .feat .txt>*+*{margin-top:18px}
+.wide-vid{max-width:1100px;margin:0 auto clamp(28px,4vw,52px)}.wide-vid video{aspect-ratio:16/9!important}
+.wide-txt{max-width:1100px;margin:0 auto}.wide-txt>*+*{margin-top:18px}
 .specs{display:grid;gap:8px}
 .specs div{display:grid;grid-template-columns:64px 1fr;align-items:center;gap:14px;padding:12px 16px;border-radius:14px;background:var(--bg2);border:1px solid var(--line)}
 .sup{grid-template-columns:repeat(3,minmax(0,1fr))}@media(max-width:760px){.sup{grid-template-columns:minmax(0,1fr)}}
@@ -256,9 +258,9 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
   </div>
 </div></section>
 
-<section class="band" id="formpaving"><div class="wrap feat rev">
-  <div class="vid"><video id="fpv" autoplay="" muted="" loop="" playsinline="" poster="/img/formpaving_poster.jpg" aria-hidden="true" style="aspect-ratio:16/9" data-l="it"><source src="/media/formpaving_it.mp4" type="video/mp4"></video></div>
-  <div class="txt">
+<section class="band" id="formpaving"><div class="wrap">
+  <div class="vid wide-vid"><video id="fpv" autoplay="" muted="" loop="" playsinline="" poster="/img/formpaving_poster.jpg" aria-hidden="true" style="aspect-ratio:16/9" data-l="it"><source src="/media/formpaving_it.mp4" type="video/mp4"></video></div>
+  <div class="txt wide-txt">
     <h2 data-t="fp_h">Getto tra casseri fissi</h2>
     <p class="lede" data-t="fp_p">Tra casseri fissi stendiamo il calcestruzzo con una finitrice a rulli. Progetto nostro: due unità cingolate imbullonate, una per estremità, la trasformano in una macchina cingolata semovente. Cilindri idraulici guidati da sensori a filo regolano la quota. Un cingolo corre sulla lastra esistente, l'altro sul sottofondo, così il lato dei casseri resta libero per la squadra.</p>
     <div class="big"><b data-t="fp_v">0–60 cm</b><span data-t="fp_u">regolazione idraulica dell'altezza</span></div>
