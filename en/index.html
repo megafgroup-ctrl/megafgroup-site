@@ -546,7 +546,8 @@ function set(o){w.classList.toggle('open',o);btn.setAttribute('aria-expanded',o)
 btn.addEventListener('click',function(){set(!w.classList.contains('open'));if(w.classList.contains('open'))inp.focus();});
 w.querySelector('.wa-x').addEventListener('click',function(){set(false);try{sessionStorage.setItem('waClosed','1')}catch(e){}});
 document.getElementById('wa-f').addEventListener('submit',function(e){e.preventDefault();var m=inp.value.trim();if(!m){inp.focus();return;}
- window.open('https://wa.me/77018655101?text='+encodeURIComponent(m+'\n\n— megafgroup.com'),'_blank','noopener');inp.value='';});
+ var u='https://wa.me/77018655101?text='+encodeURIComponent(m+'\n\n— megafgroup.com');inp.value='';
+ if(/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)){setTimeout(function(){location.href=u},150);}else{var wn=window.open(u,'_blank','noopener');if(!wn)location.href=u;}});
 inp.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();document.getElementById('wa-f').requestSubmit();}});
 var closed=false;try{closed=sessionStorage.getItem('waClosed')==='1'}catch(e){}
 if(!closed)setTimeout(function(){set(true)},1500);
