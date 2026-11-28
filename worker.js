@@ -55,22 +55,15 @@ async function visit(request, env) {
   let d = {};
   try { d = await request.json(); } catch (e) { return { skip: 'body' }; }
   const cf = request.cf || {};
-  const ip = request.headers.get('cf-connecting-ip') || '';
   const id = `#${clip(d.vid, 8)}`;
 
   if (d.type === 'start') {
-    const dv = device(ua);
     const place = [cf.city, cf.region, cf.country].filter(Boolean).join(', ') || 'bilinmiyor';
     const map = cf.latitude && cf.longitude ? ` · <a href="https://maps.google.com/?q=${cf.latitude},${cf.longitude}">harita</a>` : '';
     const v = d.visits || {};
     const lines = [
       `🔔 <b>megafgroup.com — yeni ziyaretçi</b> ${id}`,
       `📍 ${FLAG(cf.country)} ${esc(place)}${cf.postalCode ? ' (' + esc(cf.postalCode) + ')' : ''}${map}`,
-      `🏢 İnternet/kurum: ${esc(cf.asOrganization || 'bilinmiyor')}`,
-      `🔢 IP: <code>${esc(ip)}</code>`,
-      `📱 ${dv.kind} · ${esc(dv.os)} · ${esc(dv.br)}`,
-      `🖥 Ekran ${esc(d.scr)} · pencere ${esc(d.view)}${d.cores ? ' · ' + esc(d.cores) + ' çekirdek' : ''}${d.mem ? ' · ' + esc(d.mem) + ' GB RAM' : ''}${d.net ? ' · ağ ' + esc(d.net) : ''}`,
-      `🌐 Site dili ${esc(clip(d.lang, 5).toUpperCase())} · tarayıcı dili ${esc(clip(d.blang, 40))} · saat dilimi ${esc(clip(d.tz, 40))}`,
       `↪️ ${esc(source(d.ref, d.utm))}`,
       `📄 Açtığı sayfa: ${esc(clip(d.path, 60))}`,
       v.n > 1 ? `🔁 <b>${v.n}. ziyareti</b> (ilk: ${esc(new Date(v.first).toLocaleDateString('tr-TR', { timeZone: 'Asia/Almaty' }))})` : '🆕 İlk ziyareti',
