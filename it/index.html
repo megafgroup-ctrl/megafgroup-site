@@ -553,10 +553,47 @@ if(!closed)setTimeout(function(){set(true)},1500);
 </script>
 <script>
 (function(){try{
- if(localStorage.getItem('megafOwner')==='1'||sessionStorage.getItem('megafSeen'))return;
- sessionStorage.setItem('megafSeen','1');
- fetch('/api/visit',{method:'POST',headers:{'content-type':'application/json'},keepalive:true,
-  body:JSON.stringify({lang:document.documentElement.lang,ref:document.referrer})}).catch(function(){});
+ if(localStorage.getItem('megafOwner')==='1')return;
+ var S=sessionStorage, ss=function(k,v){try{if(v===undefined)return S.getItem(k);S.setItem(k,v)}catch(e){}};
+ var vid=ss('mgVid'); var isNew=!vid; if(isNew){vid=Math.random().toString(36).slice(2,10);ss('mgVid',vid);ss('mgT0',''+Date.now());}
+ var secs={};try{secs=JSON.parse(ss('mgSecs')||'{}')}catch(e){}
+ var events=[];try{events=JSON.parse(ss('mgEv')||'[]')}catch(e){}
+ function save(){ss('mgSecs',JSON.stringify(secs));ss('mgEv',JSON.stringify(events.slice(-15)));}
+ function ev(t){if(events.indexOf(t)<0){events.push(t);save();}}
+ function post(type,extra,beacon){var b=Object.assign({type:type,vid:vid,lang:document.documentElement.lang,path:location.pathname+location.hash},extra||{});var body=JSON.stringify(b);
+  if(beacon&&navigator.sendBeacon){navigator.sendBeacon('/api/visit',new Blob([body],{type:'application/json'}));return Promise.resolve(null);}
+  return fetch('/api/visit',{method:'POST',headers:{'content-type':'application/json'},body:body,keepalive:true}).then(function(r){return r.json()}).catch(function(){return null});}
+ if(isNew){
+  var q=new URLSearchParams(location.search),nav=navigator,sc=screen;
+  var info={ref:document.referrer,utm:['utm_source','utm_medium','utm_campaign','utm_term','gclid','yclid'].map(function(k){return q.get(k)?k+'='+q.get(k):''}).filter(Boolean).join(' '),
+   tz:(Intl.DateTimeFormat().resolvedOptions().timeZone||''),blang:(nav.languages||[nav.language]).slice(0,3).join(', '),
+   scr:sc.width+'×'+sc.height+' @'+(window.devicePixelRatio||1)+'x',view:innerWidth+'×'+innerHeight,
+   touch:('ontouchstart' in window)||nav.maxTouchPoints>0,cores:nav.hardwareConcurrency||'',mem:nav.deviceMemory||'',
+   net:(nav.connection&&nav.connection.effectiveType)||'',dark:matchMedia('(prefers-color-scheme: dark)').matches,
+   visits:(function(){try{var n=+(localStorage.getItem('mgVisits')||0)+1;localStorage.setItem('mgVisits',n);var f=localStorage.getItem('mgFirst');if(!f){f=new Date().toISOString();localStorage.setItem('mgFirst',f)}return {n:n,first:f}}catch(e){return {n:1}}})()};
+  post('start',info).then(function(r){if(r&&r.mid)ss('mgMid',''+r.mid);});
+ }
+ // bölümler
+ var cur=null,tIn=0;
+ function title(sec){var h=sec.querySelector('h1,h2');return (h?h.textContent:sec.id).trim().slice(0,40);}
+ if('IntersectionObserver' in window){var io=new IntersectionObserver(function(es){es.forEach(function(e){var k=title(e.target);
+   if(e.isIntersecting){cur=k;tIn=Date.now();}else if(cur===k&&tIn){secs[k]=(secs[k]||0)+Math.round((Date.now()-tIn)/1000);cur=null;save();}});},{threshold:0.5});
+  document.querySelectorAll('section[id]').forEach(function(s){io.observe(s)});}
+ // tıklamalar
+ document.addEventListener('click',function(e){var a=e.target.closest('a,button');if(!a)return;var h=a.getAttribute('href')||'';
+  if(/wa\.me/.test(h)){ev('WhatsApp numarasına tıkladı');post('click',{what:'WhatsApp numarası'});}
+  else if(/^mailto:/.test(h)){ev('E-postaya tıkladı');post('click',{what:'E-posta'});}
+  else if(/^tel:/.test(h)){ev('Telefona tıkladı');post('click',{what:'Telefon'});}
+  else if(a.closest('.langs,[data-lang],.lang')){ev('Dil değiştirdi: '+(a.textContent||'').trim());}
+  else if(a.classList.contains('wa-btn')){ev('WhatsApp kutusunu açtı');}},true);
+ var f=document.getElementById('wa-f');if(f)f.addEventListener('submit',function(){var m=(document.getElementById('wa-i')||{}).value||'';if(m.trim()){ev('WhatsApp kutusundan yazdı');post('click',{what:'WhatsApp kutusu',msg:m.slice(0,300)});}},true);
+ document.addEventListener('play',function(e){var v=e.target;if(v&&v.id&&!v.muted)ev('Video izledi: '+v.id);},true);
+ // ayrılış özeti
+ function end(){if(cur&&tIn){secs[cur]=(secs[cur]||0)+Math.round((Date.now()-tIn)/1000);tIn=Date.now();}save();
+  var dur=Math.round((Date.now()-(+ss('mgT0')||Date.now()))/1000);
+  post('end',{mid:ss('mgMid'),dur:dur,secs:secs,events:events,depth:Math.round(100*(scrollY+innerHeight)/document.documentElement.scrollHeight)},true);}
+ document.addEventListener('visibilitychange',function(){if(document.visibilityState==='hidden')end();});
+ addEventListener('pagehide',end);
 }catch(e){}})();
 </script>
 
