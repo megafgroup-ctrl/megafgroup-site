@@ -9,9 +9,9 @@ import json, os, re, tempfile, html
 from playwright.sync_api import sync_playwright
 
 SITE = 'https://megafgroup.com'
-LANGS = ['en', 'ru', 'tr', 'de', 'fr', 'it', 'zh', 'ko', 'ar']
+LANGS = ['en', 'ru', 'uz', 'tr', 'de', 'fr', 'it', 'zh', 'ko', 'ar']
 OG_LOCALE = {'en': 'en_US', 'ru': 'ru_RU', 'tr': 'tr_TR', 'de': 'de_DE', 'fr': 'fr_FR',
-             'it': 'it_IT', 'zh': 'zh_CN', 'ko': 'ko_KR', 'ar': 'ar_QA'}
+             'it': 'it_IT', 'zh': 'zh_CN', 'ko': 'ko_KR', 'ar': 'ar_QA', 'uz': 'uz_UZ'}
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TPL = open(os.path.join(ROOT, '_src', 'template.html'), encoding='utf-8').read()
 
