@@ -52,7 +52,7 @@ async function tgSetup(env) {
 
 export default {
   async fetch(request, env0, ctx) {
-    const env = Object.assign({}, env0, { TG_TOKEN: env0.TG_TOKEN || env0.GT_TOKEN, TG_CHAT: env0.TG_CHAT || env0.GT_CHAT });
+    const env = Object.assign({}, env0, { TG_TOKEN: env0.TG_TOKEN || env0.GT_TOKEN, TG_CHAT: env0.TG_CHAT || env0.GT_CHAT || '8271412032' });
     const url = new URL(request.url);
     if (url.pathname === '/api/visit') {
       if (request.method === 'POST') { ctx.waitUntil(visit(request, env).catch(() => {})); return new Response(null, { status: 204 }); }
