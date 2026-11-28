@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" data-page="ko" dir="ltr"><head>
+<script>try{var q=new URLSearchParams(location.search);if(q.get('ben')==='1'){localStorage.setItem('megafOwner','1');alert('Bu tarayıcıdan girişleriniz artık bildirim göndermeyecek.');}if(q.get('ben')==='0')localStorage.removeItem('megafOwner');}catch(e){}</script>
+
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Megaf Group — 콘크리트 도로, 공항, 중하중 포장</title>
@@ -551,9 +553,6 @@ if(!closed)setTimeout(function(){set(true)},1500);
 </script>
 <script>
 (function(){try{
- var q=new URLSearchParams(location.search);
- if(q.get('ben')==='1')localStorage.setItem('megafOwner','1');
- if(q.get('ben')==='0')localStorage.removeItem('megafOwner');
  if(localStorage.getItem('megafOwner')==='1'||sessionStorage.getItem('megafSeen'))return;
  sessionStorage.setItem('megafSeen','1');
  fetch('/api/visit',{method:'POST',headers:{'content-type':'application/json'},keepalive:true,
