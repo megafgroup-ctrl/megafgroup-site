@@ -549,6 +549,17 @@ var closed=false;try{closed=sessionStorage.getItem('waClosed')==='1'}catch(e){}
 if(!closed)setTimeout(function(){set(true)},1500);
 })();
 </script>
+<script>
+(function(){try{
+ var q=new URLSearchParams(location.search);
+ if(q.get('ben')==='1')localStorage.setItem('megafOwner','1');
+ if(q.get('ben')==='0')localStorage.removeItem('megafOwner');
+ if(localStorage.getItem('megafOwner')==='1'||sessionStorage.getItem('megafSeen'))return;
+ sessionStorage.setItem('megafSeen','1');
+ fetch('/api/visit',{method:'POST',headers:{'content-type':'application/json'},keepalive:true,
+  body:JSON.stringify({lang:document.documentElement.lang,ref:document.referrer})}).catch(function(){});
+}catch(e){}})();
+</script>
 
 
 </body></html>
